@@ -12,6 +12,7 @@ import Foundation
 class BatchRun {
     let batchScript: String
     let outputFileName: URL
+    let outputTrace: Bool
     var model: Model
     unowned let mainModel: Model
     unowned let controller: MainViewController
@@ -19,11 +20,16 @@ class BatchRun {
     var progress: Double = 0.0
     var traceFileName: URL
     
-    init(script: String, mainModel: Model, outputFile: URL, controller: MainViewController, directory: URL) {
+    init(script: String, mainModel: Model, outputFile: URL, outputTrace: Bool, controller: MainViewController, directory: URL) {
         self.batchScript = script
         self.outputFileName = outputFile
         self.traceFileName = outputFile.deletingPathExtension().appendingPathExtension("tracedat")
-        self.model = Model(batchMode: true)
+        self.outputTrace = outputTrace
+        if outputTrace {
+            self.model = Model(batchModeFullTrace: true)
+        } else {
+            self.model = Model(batchMode: true)
+        }
         self.controller = controller
         self.directory = directory
         self.mainModel = mainModel
@@ -127,6 +133,10 @@ class BatchRun {
                             self.model.batchTraceData = []
                         }
                         
+                        if self.model.batchModeFullTrace {
+                            traceOutput = self.model.getTrace(5)
+                        }
+                        
                         if !newfile {
                             // Output File
                             if FileManager.default.fileExists(atPath: self.outputFileName.path) {
@@ -143,7 +153,7 @@ class BatchRun {
                                 }
                             }
                             // Trace File
-                            if FileManager.default.fileExists(atPath: self.traceFileName.path) && self.model.batchTrace {
+                            if FileManager.default.fileExists(atPath: self.traceFileName.path) && (self.model.batchTrace || self.model.batchModeFullTrace) {
                                 var err:NSError?
                                 do {
                                     let fileHandle = try FileHandle(forWritingTo: self.traceFileName)
@@ -188,7 +198,11 @@ class BatchRun {
                     self.model.action = nil
                     self.model.imaginal = nil
                     self.model.batchParameters = []
-                    self.model = Model(batchMode: true)
+                    if self.outputTrace {
+                        self.model = Model(batchModeFullTrace: true)
+                    } else {
+                        self.model = Model(batchMode: true)
+                    }
                 case "repeat":
                     scanner.scanInt()
                 case "done": break

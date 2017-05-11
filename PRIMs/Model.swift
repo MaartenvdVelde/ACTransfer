@@ -53,6 +53,7 @@ class Model: NSObject, NSCoding {
     var scenario = PRScenario()
     /// Batch Parameters
     var batchMode: Bool
+    var batchModeFullTrace: Bool = false
     var batchParameters: [String] = []
     /// Maximum time to run the model
     var timeThreshold = 200.0
@@ -142,6 +143,17 @@ class Model: NSObject, NSCoding {
         self.action = Action(model: self)
         self.operators = Operator(model: self)
     }
+
+    convenience init(batchModeFullTrace: Bool) {
+        self.init(silent: !batchModeFullTrace, batchMode: batchModeFullTrace)
+        self.batchModeFullTrace = batchModeFullTrace
+        self.dm = Declarative(model: self)
+        self.procedural = Procedural(model: self)
+        self.imaginal = Imaginal(model: self)
+        self.action = Action(model: self)
+        self.operators = Operator(model: self)
+    }
+
     
     func encode(with coder: NSCoder) {
         coder.encode(self.dm, forKey: "dm")
@@ -359,10 +371,6 @@ class Model: NSObject, NSCoding {
             dm.partialMatching = boolVal
         case "batch-trace:":
             batchTrace = boolVal
-        //case "batch-trace":
-        //    if batchMode {
-        //        batchTrace = true
-        //    }
         default:
             if (numVal == nil) {return false}
             switch parameter {

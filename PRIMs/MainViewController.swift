@@ -658,7 +658,8 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
         if saveResult != NSFileHandlingPanelOKButton { return }
         if saveDialog.url == nil { return }
 //        print("Loading script \(fileDialog.URL!) to output to \(saveDialog.URL!)")
-        batchRunner = BatchRun(script: batchScript, mainModel: model, outputFile: saveDialog.url!, controller: self, directory: directory!)
+        let runWithTrace = sender.title == "Run Batch With Trace..."
+        batchRunner = BatchRun(script: batchScript, mainModel: model, outputFile: saveDialog.url!, outputTrace: runWithTrace, controller: self, directory: directory!)
 //        model.tracing = false
         batchProgressBar.doubleValue = 0
         batchProgressBar.isHidden = false
