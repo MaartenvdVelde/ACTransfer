@@ -13,6 +13,8 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
     
     var model = Model(silent: false)
     
+    var modelURLs: [URL] = []
+    
 //    var modelCode: String? = nil
     
     @IBOutlet var modelText: NSTextView!
@@ -354,6 +356,11 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
         if result != NSFileHandlingPanelOKButton { return }
         let URLs = fileDialog.urls // as? [NSURL]
 //        if URLs == nil { return }
+        for URL in URLs {
+            if !modelURLs.contains(URL) {
+                modelURLs.append(URL)
+            }
+        }
         for filePath in URLs {
             if !model.loadModelWithString(filePath) {
                 updateAllViews()
@@ -592,6 +599,22 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
     }
     
     
+    @IBAction func reloadModel(_ sender: NSButton) {
+        // Clear existing model data
+        model = Model(silent: false)
+        
+        // Reload each model that is currently open from its file path
+        for filePath in modelURLs {
+            if model.loadModelWithString(filePath) {
+                primViewCalculateGraph(primGraph)
+                primGraph.needsDisplay = true
+                NSDocumentController.shared().noteNewRecentDocumentURL(filePath)
+            }
+            updateAllViews()
+        }
+    }
+    
+    
     @IBAction func run(_ sender: NSButton) {
         model.run()
         updateAllViews()
@@ -612,6 +635,7 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
     
     @IBAction func reset(_ sender: NSButton) {
         model.reset(model.currentTaskIndex)
+        modelURLs.removeAll()
         primViewCalculateGraph(primGraph)
         primGraph.needsDisplay = true
         updateAllViews()
@@ -620,6 +644,7 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
     @IBAction func clearAll(_ sender: NSButton) {
         model = Model(silent: false)
 //        modelCode = nil
+        modelURLs.removeAll()
         primViewCalculateGraph(primGraph)
         primGraph.needsDisplay = true
         updateAllViews()

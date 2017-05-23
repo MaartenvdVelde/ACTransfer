@@ -458,9 +458,15 @@
                                         <action selector="clearAll:" target="Oky-zY-oP4" id="g55-f2-qk7"/>
                                     </connections>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="4BC24242-C676-457D-AC45-7A923112BBD1" label="Reload Model" paletteLabel="Reload Model" toolTip="Clear and reload open model(s) from file" tag="-1" image="NSRefreshFreestandingTemplate" id="2HK-Jd-AR4">
+                                    <connections>
+                                        <action selector="reloadModel:" target="Oky-zY-oP4" id="XeG-D8-Uqb"/>
+                                    </connections>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="QHj-UI-Kbe"/>
+                                <toolbarItem reference="2HK-Jd-AR4"/>
                                 <toolbarItem reference="tj8-vl-B2a"/>
                                 <toolbarItem reference="6GN-Gm-CeO"/>
                                 <toolbarItem reference="WSL-bf-uYy"/>
@@ -1108,6 +1114,7 @@
     </scenes>
     <resources>
         <image name="NSCaution" width="32" height="32"/>
+        <image name="NSRefreshFreestandingTemplate" width="14" height="14"/>
         <image name="NSTrashEmpty" width="32" height="32"/>
         <image name="PrimsModelFileIcon" width="512" height="512"/>
         <image name="fastforward" width="32" height="32"/>
