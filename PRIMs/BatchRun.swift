@@ -19,11 +19,14 @@ class BatchRun {
     let directory: URL
     var progress: Double = 0.0
     var traceFileName: URL
+    var fullTraceFileName: URL
+    var fullTraceOutput: String = ""
     
     init(script: String, mainModel: Model, outputFile: URL, outputTrace: Bool, controller: MainViewController, directory: URL) {
         self.batchScript = script
         self.outputFileName = outputFile
         self.traceFileName = outputFile.deletingPathExtension().appendingPathExtension("tracedat")
+        self.fullTraceFileName = outputFile.deletingPathExtension().appendingPathExtension("fulltrace")
         self.outputTrace = outputTrace
         if outputTrace {
             self.model = Model(batchModeFullTrace: true)
@@ -50,8 +53,14 @@ class BatchRun {
             return
         }
         var newfile = true
+        
+        self.addToFullTrace("Running PRIMs in batch mode (\(numberOfRepeats!) runs).")
+        
         for i in 0..<numberOfRepeats! {
             self.mainModel.addToTraceField("Run #\(i + 1)")
+            
+            self.addToFullTrace("Run #\(i + 1)")
+            
             DispatchQueue.main.async {
                 self.controller.updateAllViews()
             }
@@ -88,8 +97,10 @@ class BatchRun {
                 
                     if stopByTime {
                         self.mainModel.addToTraceField("Running task \(taskname!) with label \(taskLabel!) for \(endCriterium!) seconds")
+                        self.addToFullTrace("Running task \(taskname!) with label \(taskLabel!) for \(endCriterium!) seconds")
                     } else {
                         self.mainModel.addToTraceField("Running task \(taskname!) with label \(taskLabel!) for \(endCriterium!) trials")
+                        self.addToFullTrace("Running task \(taskname!) with label \(taskLabel!) for \(endCriterium!) trials")
                     }
                     DispatchQueue.main.async {
                         self.controller.updateAllViews()
@@ -134,7 +145,7 @@ class BatchRun {
                         }
                         
                         if self.model.batchModeFullTrace {
-                            traceOutput = self.model.getTrace(5)
+                            self.addToFullTrace(self.model.getTrace(5))
                         }
                         
                         if !newfile {
@@ -153,7 +164,7 @@ class BatchRun {
                                 }
                             }
                             // Trace File
-                            if FileManager.default.fileExists(atPath: self.traceFileName.path) && (self.model.batchTrace || self.model.batchModeFullTrace) {
+                            if FileManager.default.fileExists(atPath: self.traceFileName.path) && (self.model.batchTrace) {
                                 var err:NSError?
                                 do {
                                     let fileHandle = try FileHandle(forWritingTo: self.traceFileName)
@@ -187,6 +198,7 @@ class BatchRun {
                     }
                 case "reset":
                     self.mainModel.addToTraceField("Resetting models")
+                    self.addToFullTrace("Resetting models")
                     DispatchQueue.main.async {
                         self.controller.updateAllViews()
                     }
@@ -233,6 +245,7 @@ class BatchRun {
                 }
             }
             self.mainModel.addToTraceField("Done")
+            self.addToFullTrace("Done")
             DispatchQueue.main.async {
                 self.controller.updateAllViews()
             }
@@ -241,6 +254,11 @@ class BatchRun {
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "progress"),object: nil)
             }
             }
+            
+            if self.outputTrace {
+                self.writeFullTraceToFile()
+            }
+            
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "progress"),object: nil)
             }
@@ -248,6 +266,26 @@ class BatchRun {
 
         
     }
-
+    
+    func addToFullTrace(_ s: String) {
+        self.fullTraceOutput += s + "\n"
+    }
+    
+    func writeFullTraceToFile() {
+        if FileManager.default.fileExists(atPath: self.fullTraceFileName.path) {
+            do {
+                try FileManager.default.removeItem(atPath: self.fullTraceFileName.path)
+            } catch let error as NSError {
+                print("Can't overwrite existing full tracefile \(error)")
+            }
+        }
+        
+        do {
+            try fullTraceOutput.write(to: self.fullTraceFileName, atomically: false, encoding: String.Encoding.utf8)
+        } catch let error as NSError {
+            print("Can't write full tracefile \(error)")
+        }
+    }
+    
     
 }
