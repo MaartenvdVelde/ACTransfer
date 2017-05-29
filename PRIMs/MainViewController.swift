@@ -678,7 +678,12 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
         saveDialog.allowsOtherFileTypes = false
         saveDialog.allowedFileTypes = ["dat","txt"]
         let name = fileDialog.url!.deletingPathExtension().lastPathComponent
-        saveDialog.nameFieldStringValue = name + ".dat"
+//        saveDialog.nameFieldStringValue = name + ".dat"
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd-HHmm"
+        let currentTime = dateFormatter.string(from: date)
+        saveDialog.nameFieldStringValue = name + "_" + currentTime + ".dat"
         let saveResult = saveDialog.runModal()
         if saveResult != NSFileHandlingPanelOKButton { return }
         if saveDialog.url == nil { return }
