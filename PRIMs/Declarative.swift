@@ -289,6 +289,38 @@ class Declarative: NSObject, NSCoding  {
         }
     }
     
+    // Mismatch function for moods
+    func mismatchMoods(_ x: Value, _ y: Value) -> Double {
+        /* Return similarity if there is one, else return -1*/
+        
+        var mismatch = -1.0
+        
+        let onlyText = "[a-z]+"
+        let rangeMoodX = x.description.range(of: onlyText, options: .regularExpression)!
+        let moodX = x.description.substring(with: rangeMoodX)
+        let rangeMoodY = y.description.range(of: onlyText, options: .regularExpression)!
+        let moodY = y.description.substring(with: rangeMoodY)
+        
+        // Same mood but different face
+        if (moodX == moodY) {
+            mismatch = -0.1
+        }
+        
+        else if (moodX == "happy" && moodY == "neutral" || moodX == "neutral" && moodY == "happy") {
+            mismatch = -0.25
+        }
+        
+        else if (moodX == "happy" && moodY == "sad" || moodX == "sad" && moodY == "happy") {
+            mismatch = -0.75
+        }
+        
+        else if (moodX == "neutral" && moodY == "sad" || moodX == "sad" && moodY == "neutral") {
+            mismatch = -0.25
+        }
+        
+        return mismatch
+    }
+    
     // Mismatch function for numbers
     func mismatchNumbers(_ x: Value, _ y: Value) -> Double {
         /* Return similarity if there is one, else return -1
@@ -306,11 +338,16 @@ class Declarative: NSObject, NSCoding  {
     // General Mismatch Function
     func mismatchFunction(_ x: Value, y: Value) -> Double? {
         /* Select the correct mismatch function and return similarity if there is one */
+        
         var mismatch: Double
+        let faceMoodRegex = "(happy\\d+)|(neutral\\d+)|(sad\\d+)"
+        
         if (x.description == y.description) {
             mismatch = 0
         } else if (Double(x.description) != nil && Double(y.description) != nil) {
             mismatch = mismatchNumbers(x, y)
+        } else if (x.description.range(of: faceMoodRegex, options: .regularExpression) != nil && y.description.range(of: faceMoodRegex, options: .regularExpression) != nil) {
+            mismatch = mismatchMoods(x, y)
         } else {
             mismatch = -1
         }
