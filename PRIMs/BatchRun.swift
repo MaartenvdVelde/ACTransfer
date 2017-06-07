@@ -145,7 +145,7 @@ class BatchRun {
                         }
                         
                         if self.model.batchModeFullTrace {
-                            self.addToFullTrace(self.model.getTrace(5))
+                            self.addToFullTrace(self.model.getTrace(4))
                         }
                         
                         if !newfile {
