@@ -307,7 +307,7 @@ class Declarative: NSObject, NSCoding  {
         }
         
         else if (moodX == "happy" && moodY == "neutral" || moodX == "neutral" && moodY == "happy") {
-            mismatch = -0.25
+            mismatch = -0.40
         }
         
         else if (moodX == "happy" && moodY == "sad" || moodX == "sad" && moodY == "happy") {
@@ -315,7 +315,7 @@ class Declarative: NSObject, NSCoding  {
         }
         
         else if (moodX == "neutral" && moodY == "sad" || moodX == "sad" && moodY == "neutral") {
-            mismatch = -0.25
+            mismatch = -0.40
         }
         
         return mismatch
