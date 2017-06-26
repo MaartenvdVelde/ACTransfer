@@ -291,7 +291,9 @@ class Declarative: NSObject, NSCoding  {
     
     // Mismatch function for moods
     func mismatchMoods(_ x: Value, _ y: Value) -> Double {
-        /* Return similarity if there is one, else return -1*/
+        /* Return similarity if there is one, else return -1
+            x : face slot of candidate chunk in DM
+            y : face slot of retrieval request (face on screen) */
         
         var mismatch = -1.0
         
@@ -306,18 +308,38 @@ class Declarative: NSObject, NSCoding  {
             mismatch = -0.1
         }
         
-        else if (moodX == "happy" && moodY == "neutral" || moodX == "neutral" && moodY == "happy") {
-            mismatch = -0.25
+        // Mistaking a happy face for a neutral face
+        else if (moodX == "neutral" && moodY == "happy") {
+            mismatch = -0.40
         }
-        
-        else if (moodX == "happy" && moodY == "sad" || moodX == "sad" && moodY == "happy") {
+            
+        // Mistaking a happy face for a sad face
+        else if (moodX == "sad" && moodY == "happy") {
             mismatch = -0.75
         }
         
-        else if (moodX == "neutral" && moodY == "sad" || moodX == "sad" && moodY == "neutral") {
-            mismatch = -0.25
+        // Mistaking a neutral face for a happy face
+        else if (moodX == "happy" && moodY == "neutral") {
+            mismatch = -0.30
         }
+            
+        // Mistaking a neutral face for a sad face
+        else if (moodX == "sad" && moodY == "neutral") {
+            mismatch = -0.30
+        }
+            
+        // Mistaking a sad face for a happy face
+        else if (moodX == "happy" && moodY == "sad") {
+            mismatch = -0.75
+        }
+
+        // Mistaking a sad face for a neutral face
+        else if (moodX == "neutral" && moodY == "sad") {
+            mismatch = -0.30
+        }
+
         
+
         return mismatch
     }
     
