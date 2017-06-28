@@ -90,7 +90,8 @@ class FruchtermanReingold {
     }
     
     func calculate() {
-        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low).async { () -> Void in
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async { () -> Void in
+//        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low).async { () -> Void in
         var maxRank = 0.0
         for (_,node) in self.nodes {
             node.x = Double(Int(arc4random_uniform(UInt32(self.W))))

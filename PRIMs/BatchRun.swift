@@ -42,7 +42,7 @@ class BatchRun {
     
     func runScript() {
         mainModel.clearTrace()
-        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.low).async { () -> Void in
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async { () -> Void in
 
         var scanner = Scanner(string: self.batchScript)
         let whiteSpaceAndNL = CharacterSet.whitespacesAndNewlines
@@ -124,22 +124,26 @@ class BatchRun {
                     let startTime = self.model.time
                     while (!stopByTime && j < Int(endCriterium!)) || (stopByTime && (self.model.time - startTime) < endCriterium!) {
                         j += 1
-//                    for j in 0..<numberOfTrials! {
-//                        print("Trial #\(j)")
+                        
+                        self.mainModel.addToTraceField("Trial \(j)")
+                        DispatchQueue.main.async {
+                            self.controller.updateAllViews()
+                        }
+                        
                         self.model.run()
                         var output: String = ""
                         for line in self.model.outputData {
-                            output += "\(i) \(taskname!) \(taskLabel!) \(j) \(line.time) \(line.eventType) \(line.eventParameter1) \(line.eventParameter2) \(line.eventParameter3) "
+                            output.append("\(i) \(taskname!) \(taskLabel!) \(j) \(line.time) \(line.eventType) \(line.eventParameter1) \(line.eventParameter2) \(line.eventParameter3) ")
                             for item in line.inputParameters {
-                                output += item + " "
+                                output.append("\(item) ")
                             }
-                            output += "\n"
+                            output.append("\n")
                         }
                         // Print trace to file
                         var traceOutput = ""
                         if self.model.batchTrace {
                             for (time, type, event) in self.model.batchTraceData {
-                                traceOutput += "\(i) \(taskname!) \(taskLabel!) \(j) \(time) \(type) \(event) \n"
+                                traceOutput.append("\(i) \(taskname!) \(taskLabel!) \(j) \(time) \(type) \(event) \n")
                             }
                             self.model.batchTraceData = []
                         }
@@ -216,7 +220,7 @@ class BatchRun {
                         self.model = Model(batchMode: true)
                     }
                 case "repeat":
-                    scanner.scanInt()
+                    _ = scanner.scanInt()
                 case "done": break
 //                    print("*** Model has finished running ****")
                 case "load-image":
@@ -268,7 +272,7 @@ class BatchRun {
     }
     
     func addToFullTrace(_ s: String) {
-        self.fullTraceOutput += s + "\n"
+        self.fullTraceOutput.append(s + "\n")
     }
     
     func writeFullTraceToFile() {
