@@ -272,7 +272,7 @@ class BatchRun {
     }
     
     func addToFullTrace(_ s: String) {
-        self.fullTraceOutput.append(s + "\n")
+        self.fullTraceOutput.append("\(s)\n")
     }
     
     func writeFullTraceToFile() {
