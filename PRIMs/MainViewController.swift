@@ -494,7 +494,10 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
             let chunkType = chunkTp == nil ? "No Type" : chunkTp!.description
             result.append((chunk.name,chunkType,chunk.activation()))
         }
-        result = result.sorted(by: compareChunks)
+        //result = result.sorted(by: compareChunks)
+        result = result.sorted() {
+            if ($0.1 != $1.1) { return $0.1 < $1.1 } // sort by chunk type
+            else { return $0.0 < $1.0 } } // and then alphabetically
         return result
     }
     
