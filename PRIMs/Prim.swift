@@ -137,9 +137,17 @@ class Prim:NSObject, NSCoding {
     - returns: a Bool to indicate success
     */
     func fire() -> Bool {
-        let lhsVal = lhsBuffer == nil ? nil :
+        var lhsVal = lhsBuffer == nil ? nil :
         lhsBuffer! == "operator" ? model.buffers[lhsBuffer!]?.slotValue(lhsSlot!) : model.formerBuffers[lhsBuffer!]?.slotValue(lhsSlot!)
-
+        
+        // Dynamically replace the value in the LHS with a context label
+        // ("context1", "context2", ..., "contextn")
+        if lhsVal?.description == "ASSIGN_NEW_CONTEXT_LABEL" {
+            lhsVal = model.getNewContextLabel()
+        } else if lhsVal?.description == "ASSIGN_CURRENT_CONTEXT_LABEL" {
+            lhsVal = model.getCurrentContextLabel()
+        }
+        
         switch op {
         case "=":
             if rhsBuffer == nil {

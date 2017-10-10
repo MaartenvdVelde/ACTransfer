@@ -26,6 +26,7 @@ class Model: NSObject, NSCoding {
     var operators: Operator!
     var buffers: [String:Chunk] = [:]
     var chunkIdCounter = 0
+    var contextCounter = 0
     var running = false
     var fallingThrough = false
     var startTime: Double = 0.0
@@ -689,6 +690,7 @@ class Model: NSObject, NSCoding {
         buffers = [:]
         time = 0
         chunkIdCounter = 0
+        contextCounter = 0
         running = false
         startTime = 0
 //        trace = []
@@ -757,6 +759,15 @@ class Model: NSObject, NSCoding {
         return chunk
     }
     
+    func getNewContextLabel() -> Value {
+        contextCounter += 1
+        return stringToValue("context\(contextCounter)")
+    }
+
+    func getCurrentContextLabel() -> Value {
+        return stringToValue("context\(contextCounter)")
+    }
+
     func stringToValue(_ s: String) -> Value {
         let possibleNumVal = string2Double(s)
         if possibleNumVal != nil {
