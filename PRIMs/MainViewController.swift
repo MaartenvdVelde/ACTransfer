@@ -756,6 +756,12 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
         NotificationCenter.default.addObserver(self, selector: #selector(MainViewController.respondToOpenFile(_:)), name: NSNotification.Name(rawValue: "openFile"), object: nil)
         
     }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        let buildNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") ?? "0"
+        self.view.window?.title = "PRIMs   [\(buildNumber)]"
+    }
 
     override var representedObject: Any? {
         didSet {
