@@ -348,6 +348,27 @@ class Declarative: NSObject, NSCoding  {
         return mismatch
     }
     
+    
+    // Mismatch function for temporal context tags
+    func mismatchContext(_ x: Value, _ y: Value) -> Double {
+        /* Return similarity if there is one, else return -1
+         Similarity of values x and y is defined as 1/sqrt(|x-y| + 1) - 1
+         (NOTE: perhaps consider alternative function y = max(-0.1x, -1))
+         x : context slot of candidate chunk in DM
+         y : context slot of retrieval request (time tag of 1-back) */
+        
+        let onlyNum = "[0-9]+"
+        let rangeContextX = x.description.range(of: onlyNum, options: .regularExpression)!
+        let contextX = Double(x.description.substring(with: rangeContextX))
+        let rangeContextY = y.description.range(of: onlyNum, options: .regularExpression)!
+        let contextY = Double(y.description.substring(with: rangeContextY))
+        
+        let mismatch = 1 / sqrt(abs(contextX! - contextY!) + 1) - 1
+                
+        return mismatch
+
+    }
+    
     // Mismatch function for numbers
     func mismatchNumbers(_ x: Value, _ y: Value) -> Double {
         /* Return similarity if there is one, else return -1
@@ -368,6 +389,7 @@ class Declarative: NSObject, NSCoding  {
         
         var mismatch: Double
         let faceMoodRegex = "(happy\\d+)|(neutral\\d+)|(sad\\d+)"
+        let contextRegex = "context\\d+"
         
         if (x.description == y.description) {
             mismatch = 0
@@ -375,6 +397,8 @@ class Declarative: NSObject, NSCoding  {
             mismatch = mismatchNumbers(x, y)
         } else if (x.description.range(of: faceMoodRegex, options: .regularExpression) != nil && y.description.range(of: faceMoodRegex, options: .regularExpression) != nil) {
             mismatch = mismatchMoods(x, y)
+        } else  if (x.description.range(of: contextRegex, options: .regularExpression) != nil && y.description.range(of: contextRegex, options: .regularExpression) != nil) {
+            mismatch = mismatchContext(x, y)
         } else {
             mismatch = -1
         }
