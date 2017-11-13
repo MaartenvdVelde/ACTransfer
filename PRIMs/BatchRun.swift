@@ -234,7 +234,12 @@ class BatchRun {
                     guard let m = (NSKeyedUnarchiver.unarchiveObject(withFile: taskPath) as? Model) else { return }
                     self.model = m
                     self.model.dm.reintegrateChunks()
-                    self.model.batchMode = true
+//                    self.model.batchMode = true
+                    if self.outputTrace {
+                        self.model.batchModeFullTrace = true
+                    } else {
+                        self.model.batchMode = true
+                    }
                 case "save-image":
                     let filename = scanner.scanUpToCharactersFromSet(whiteSpaceAndNL as CharacterSet)
                     if filename == nil {
