@@ -356,6 +356,23 @@ class Chunk: NSObject, NSCoding {
         return totalSpreading
     }
     
+    
+    func spreadingActivationFromGoalBuffer() -> Double {
+        return spreadingFromBuffer("goal", spreadingParameterValue: model.dm.goalActivation)
+    }
+    
+    
+    func spreadingActivationFromImaginalBuffer() -> Double {
+        return spreadingFromBuffer("imaginal", spreadingParameterValue: model.dm.imaginalActivation)
+    }
+    
+    
+    func spreadingActivationFromRetrievalBuffer() -> Double {
+        return spreadingFromBuffer("retrievalH", spreadingParameterValue: model.dm.retrievalActivation)
+    }
+    
+    
+    
     func calculateNoise() -> Double {
         if model.time != noiseTime {
             noiseValue = (model.dm.activationNoise == nil ? 0.0 : actrNoise(model.dm.activationNoise!))

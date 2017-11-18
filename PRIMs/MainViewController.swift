@@ -457,7 +457,7 @@ class MainViewController: NSViewController,NSTableViewDataSource,NSTableViewDele
         } else if sender == chunkTable && sender.selectedRow != -1 {
             let chunk = model.dm.chunks[dmTable[sender.selectedRow].0]!
 //            chunkTextField.stringValue = "\(chunk)\nBaselevel = \(chunk.baseLevelActivation())\nActivation = \(chunk.activation())\nReferences = \(chunk.references)\n"
-            chunkTextField.stringValue = "\(chunk)\nActivation = \(chunk.activation())\n  Baselevel = \(chunk.baseLevelActivation())\n  Spreading activation = \(chunk.spreadingActivation())\n  Activation noise = \(chunk.noiseValue)\n\nReferences = \(chunk.references)\n"
+            chunkTextField.stringValue = "\(chunk)\nActivation = \(chunk.activation())\n  Baselevel = \(chunk.baseLevelActivation())\n  Spreading activation = \(chunk.spreadingActivation())\n    From goal: \(chunk.spreadingActivationFromGoalBuffer())\n    From retrieval: \(chunk.spreadingActivationFromRetrievalBuffer())\n    From imaginal: \(chunk.spreadingActivationFromImaginalBuffer())\n  Activation noise = \(chunk.noiseValue)\n\nReferences = \(chunk.references)\n"
             if !chunk.assocs.isEmpty {
                 chunkTextField.stringValue += "Associations:\n"
                 for (chunkName, assoc) in chunk.assocs {
