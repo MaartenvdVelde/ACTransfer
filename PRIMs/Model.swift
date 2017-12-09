@@ -397,6 +397,8 @@ class Model: NSObject, NSCoding {
                 dm.retrievalThreshold = numVal!
             case "lf:":
                 dm.latencyFactor = numVal!
+            case "le:":
+                dm.latencyExponent = numVal!
             case "mp:":
                 dm.misMatchPenalty = numVal!
             case "ans:":

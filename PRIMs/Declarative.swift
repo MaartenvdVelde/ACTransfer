@@ -25,6 +25,7 @@ class Declarative: NSObject, NSCoding  {
     static let misMatchPenaltyDefault = 5.0
     static let goalSpreadingActivationDefault = false
     static let latencyFactorDefault = 0.2
+    static let latencyExponentDefault = 1.0
     static let goalOperatorLearningDefault = false
     static let betaDefault = 0.1
     static let explorationExploitationFactorDefault = 0.0
@@ -63,6 +64,8 @@ class Declarative: NSObject, NSCoding  {
     var goalSpreadingByActivation = goalSpreadingActivationDefault
     /// ACT-R latency factor (F)
     var latencyFactor = latencyFactorDefault
+    /// ACT-R latency exponent (f)
+    var latencyExponent = latencyExponentDefault
     /// Indicates whether associations between goals and operators will be learned
     var goalOperatorLearning = goalOperatorLearningDefault
     /// Learning rate of goal operator association learning
@@ -239,7 +242,7 @@ class Declarative: NSObject, NSCoding  {
     - returns: the latency
     */
     func latency(_ activation: Double) -> Double {
-        return latencyFactor * exp(-activation)
+        return latencyFactor * exp(-latencyExponent * activation)
     }
     
     func retrieve(_ chunk: Chunk) -> (Double, Chunk?) {
