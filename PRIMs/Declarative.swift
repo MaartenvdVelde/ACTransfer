@@ -242,7 +242,7 @@ class Declarative: NSObject, NSCoding  {
     - returns: the latency
     */
     func latency(_ activation: Double) -> Double {
-        return latencyFactor * exp(-latencyExponent * activation)
+        return latencyFactor * exp(-activation)
     }
     
     func retrieve(_ chunk: Chunk) -> (Double, Chunk?) {
@@ -273,7 +273,7 @@ class Declarative: NSObject, NSCoding  {
             return (latency(bestActivation) , bestMatch)
         } else {
             retrieveError = true
-            return (latency(retrievalThreshold), nil)
+            return (latency(latencyExponent * retrievalThreshold), nil)
         }
         
     }
