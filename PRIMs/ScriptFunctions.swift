@@ -60,6 +60,7 @@ let scriptFunctions: [String:([Factor], Model?) throws -> (result: Factor?, done
     "report-memory": reportMemory,
     "imaginal-to-dm": imaginalToDM,
     "set-references": setReferences,
+    "remove-chunks-created-by-model": removeChunksCreatedByModel,
     ]
 
 
@@ -627,3 +628,12 @@ func setReferences(_ content: [Factor], model: Model?) throws -> (result: Factor
     chunk!.references = value!
     return(nil, true)
 }
+
+/**
+ Remove chunks from DM that were created in the imaginal buffer.
+ */
+func removeChunksCreatedByModel(_ content: [Factor], model: Model?) throws -> (result: Factor?, done: Bool) {
+    model!.dm.removeImaginalChunksFromDM()
+    return(nil, true)
+}
+

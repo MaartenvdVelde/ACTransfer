@@ -236,6 +236,18 @@ class Declarative: NSObject, NSCoding  {
         }
     }
     
+    
+    /**
+     Removes all chunks from DM that were created in the imaginal buffer over the course of the task.
+     */
+    func removeImaginalChunksFromDM() {
+        for(name, _) in chunks {
+            if name.contains("imaginalN") {
+                chunks.removeValue(forKey: name)
+            }
+        }
+    }
+    
     /**
     Calculate chunk latency
     - parameter activation: an activation value
