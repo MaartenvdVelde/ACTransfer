@@ -149,7 +149,7 @@ class BatchRun {
                         }
                         
                         if self.model.batchModeFullTrace {
-                            self.addToFullTrace(self.model.getTrace(4))
+                            self.addToFullTrace(self.model.getTrace(2)) // detail level 2: operators and modules
                         }
                         
                         if !newfile {
