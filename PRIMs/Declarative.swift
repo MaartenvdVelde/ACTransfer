@@ -320,45 +320,38 @@ class Declarative: NSObject, NSCoding  {
         
         // Same mood but different face
         if (moodX == moodY) {
-            mismatch = -0.1
+            mismatch = -0.05
         }
         
         // Mistaking a happy face for a neutral face
         else if (moodX == "neutral" && moodY == "happy") {
-            mismatch = -0.45
-//            mismatch = -0.35
+            mismatch = -0.1
         }
             
         // Mistaking a happy face for a sad face
         else if (moodX == "sad" && moodY == "happy") {
-            mismatch = -0.55
-//            mismatch = -0.4
+            mismatch = -0.3
         }
         
         // Mistaking a neutral face for a happy face
         else if (moodX == "happy" && moodY == "neutral") {
-            mismatch = -0.45
-//            mismatch = -0.35
+            mismatch = -0.2
         }
             
         // Mistaking a neutral face for a sad face
         else if (moodX == "sad" && moodY == "neutral") {
-            mismatch = -0.45
-//            mismatch = -0.35
+            mismatch = -0.2
         }
             
         // Mistaking a sad face for a happy face
         else if (moodX == "happy" && moodY == "sad") {
-            mismatch = -0.55
-//            mismatch = -0.4
+            mismatch = -0.3
         }
 
         // Mistaking a sad face for a neutral face
         else if (moodX == "neutral" && moodY == "sad") {
-            mismatch = -0.25
+            mismatch = -0.1
         }
-
-        
 
         return mismatch
     }
