@@ -452,7 +452,7 @@ class Declarative: NSObject, NSCoding  {
             return (latency(bestActivation) , bestMatch)
         } else {
             retrieveError = true
-            return (latency(retrievalThreshold), nil)
+            return (latency(latencyExponent * retrievalThreshold), nil)
         }
     }
 
